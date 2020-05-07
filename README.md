@@ -34,3 +34,7 @@ La implementación de este ejercicio se realizará por medio de código escrito 
 
 Con el fin de generar un entorno aislado que permita evaluar el desempeño del proceso de entrenamiento en término de recursos computacionales, se utilizará una instancia EC2 de Amazon Web Services (`AWS`). Adicionalmente, para tener un control del entorno virtual asociado, se creará una imagen de `docker` asociada al repositorio donde se encontrarán todos los códigos de este proyecto.
 
+### Referencias
+
+- Nocedal, J., & Wright, S. (2006). Numerical optimization. Springer Science & Business Media.
+- Colubri, A., Hartley, M. A., Siakor, M., Wolfman, V., Felix, A., Sesay, T., ... & Sabeti, P. C. (2019). Machine-learning Prognostic Models from the 2014–16 Ebola Outbreak: Data-harmonization Challenges, Validation Strategies, and mHealth Applications. EClinicalMedicine, 11, 54-6º4.
