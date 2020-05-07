@@ -28,7 +28,7 @@ La implementación de este ejercicio se realizará por medio de código escrito 
 - Paralelizar procesos; por ejemplo: resolver en paralelo la dirección del descenso.
 - Dockerizar ambiente
 - Comparar tiempos de ejecución
-- Unittest
+- Pruebas Unitarias
 
 ### Herramientas a utilizar
 
