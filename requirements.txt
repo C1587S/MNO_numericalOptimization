@@ -1,1 +1,8 @@
-
+guppy3
+line_profiler
+memory_profiler
+pandas
+pytest
+psutil
+scipy
+scikit-learn
