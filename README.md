@@ -1,3 +1,6 @@
+
+>Este repositorio puede ser ejecutado interactivamente desde `binder` dando click en el siguiente botón:  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/C1587S/MNO_numericalOptimization/master)
+
 # Implementación de métodos de optimización numérica en un modelo de aprendizaje
 
 ## Objetivo
