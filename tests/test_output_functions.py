@@ -1,23 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 
 #================================================================
 # Unittest for Checking Ranges and Outputs of Auxiliar Functions
 #================================================================
 
 
-# In[ ]:
 
 
 import numpy as np
 import unittest
 
-
-# In[ ]:
 
 
 def calc_mu(X,beta):
@@ -35,10 +29,6 @@ def calc_mu(X,beta):
     return mu
    
 
-
-# In[ ]:
-
-
 def sigmoide(z):
     '''
     Devuelve el sigmoide de un vector
@@ -50,8 +40,6 @@ def sigmoide(z):
     sig = 1/(1+ np.exp(-z))
     return sig
 
-
-# In[ ]:
 
 
 def clasifica(X, beta_hat,limit=0.5):
@@ -71,8 +59,6 @@ def clasifica(X, beta_hat,limit=0.5):
     yhat[mu>=limit]=1
     return yhat
 
-
-# In[ ]:
 
 
 class OutputValues(unittest.TestCase):
