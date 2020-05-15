@@ -6,3 +6,6 @@ pytest
 psutil
 scipy
 scikit-learn
+unittest
+pytest
+cupy
