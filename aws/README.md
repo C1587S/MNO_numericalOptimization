@@ -16,15 +16,20 @@ Para salir, basta con poner exit en el shell de la instancia.
 
 ## II. ec2-config.sh
 
-Este script crea los usuarios en la EC2 para los integrantes del equipo.  Es necesario introducir una contraseña a cada uno de ellos, por lo que debemos estar conectados a la instancia. Para poder hacer uso es necesario darle los permisos con el comando
+Este script crea los usuarios en la EC2 para los integrantes del equipo.  Es necesario introducir una contraseña a cada uno de ellos, por lo que debemos estar conectados a la instancia.  
+1. Copiar el archivo a la instancia
+```
+scp -i "llave.pem" <ruta a archivo>/ec2-config.sh ubuntu@<ip instancia>:~
+```
 
+2. Para poder hacer uso es necesario darle los permisos con el comando
 ```
 chmod +x ec2-config.sh.
 ```
-y corremos el script:
 
+3. Corremos el script:
 ```
-./ec2-config.sh
+sudo ./ec2-config.sh
 ```
 
 En este punto ya tenemos a los usuarios agregados: todos con la misma contraseña y permisos de super usuario.
@@ -35,7 +40,7 @@ Además se instala la paquetearía básica necesaria para montar el ambiente vir
 
 Una vez creados los usuarios, copiaremos las llaves públicas de cada uno de los usuarios a su usuario correspondiente.
 Para **cada usuario** debemos de seguir el siguiente proceso:  
-1. Es necesario modificar el archivo sudo nano /etc/ssh/sshd_config y cambiar los parámetros a la siguiente configuración:
+1. Es necesario modificar el archivo ```sudo nano /etc/ssh/sshd_config``` y cambiar los parámetros a la siguiente configuración:
   + PubkeyAuthentication yes
   + PasswordAuthentication yes
 
