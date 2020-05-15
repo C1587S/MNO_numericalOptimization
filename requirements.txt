@@ -1,4 +1,3 @@
-cupy
 guppy3
 line_profiler
 memory_profiler
@@ -7,4 +6,3 @@ pytest
 psutil
 scipy
 scikit-learn
-unittest
