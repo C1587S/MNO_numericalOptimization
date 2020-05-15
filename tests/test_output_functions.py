@@ -64,7 +64,7 @@ def clasifica(X, beta_hat,limit=0.5):
 class OutputValues(unittest.TestCase):
     
     
-    def test_range_sigmoide(self):
+    def test_sigmoide_range(self):
         '''
         Test para evaluar si la función "sigmoide" retorna vectores con entradas cuyos valores están
         entre el rango -1 y 1.
@@ -84,6 +84,16 @@ class OutputValues(unittest.TestCase):
         for i in range(0, len(clasifica(X, beta_hat,0.5))):
             with self.subTest(i=i):
                 self.assertTrue(1 == clasifica(X, beta_hat, 0.5)[i] or clasifica(X, beta_hat, 0.5)[i] == 0)
+
+    def test_calc_mu_dimension(self):
+        
+        '''
+        Test para evaluar la concordancia entre las dimensiones de entrada de la funcion 
+        "calc_mu" y las dimensiones de salida.
+        '''
+
+        self.assertEqual(len(calc_mu(X, beta)), np.size(X,0))
+
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
