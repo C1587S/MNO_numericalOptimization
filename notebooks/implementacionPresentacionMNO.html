@@ -13083,7 +13083,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># librerías</span>
@@ -13094,8 +13094,8 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">adds</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
 </pre></div>
 
     </div>
@@ -14458,39 +14458,12 @@ $$<p>donde $\boldsymbol{S}\triangleq diag(\mu_{i}(1-\mu_{i}))$. Adicionalmente, 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="M&#233;todo-de-m&#225;ximo-descenso">M&#233;todo de m&#225;ximo descenso<a class="anchor-link" href="#M&#233;todo-de-m&#225;ximo-descenso">&#182;</a></h3><p>El método de máximo descenso es el método de búsqueda de línea más
-sencillo, y plantea que la forma de encontrar el mínimo de una función
-$f(\beta_{k})$ es por medio de la búsqueda iterativa de $\beta_{k}$
-siguiendo la dirección negativa del gradiente asociado, i-.e. $-p^{T}\nabla f_{k}$ (donde $\nabla f_{k}$ es el gradiente de la función $f$ con respecto
-a $\beta_{k}$. ). Cabe anotar que, como es resaltado por Nocedal, este supuesto está
-basado en el Teorema de Taylor, el cual establece que:</p>
-$$
-f(\beta_{k}+\alpha_k p)\approx f(\beta_{k})+\alpha_k p^{T}\nabla f_{k}
-$$<p>donde $\alpha_k$ es el paso del descenso o tasa de aprendizaje en la iteración $k$. Así, en la ecuación anterior
-la función $f$ disminuye a una tasa de paso, multiplicada por el
-gradiente y el paso, y una dirección $p$, es decir: $p^{T}\nabla f_{k}$.
-Por otro lado, dado que el gradiente es negativo se cumple que:</p>
-$$
-f(\beta_{k}+\alpha_k p)&lt;f(\beta_{k})\label{eq:condicion_desc}
-$$<p>Adicional a lo anterior, es de vital importancia adicionar un componente
-al problema, correspondiente a la elección de la tasa de aprendizaje,
-$\alpha$, en la medida que, valores muy altos de la misma, pueden
-impedir que haya convergencia hacia el mínimo y el algoritmo se estanque,
-o que su convergencia sea demasiado lenta.</p>
-<p>Así, como es presentado por Nocedal &amp; Wright (2006) y Murphy (2012), el último componente
-que se requiere adicionar al problema de optimización planteado, y
-que a su vez lo convierte en un método de búsqueda de línea o minimización
-de línea (line search), es elegir $\alpha$
-tal que se minimice:</p>
-$$
-\varphi(\alpha)=f(\beta_{k}+\alpha_k p)\label{eq:cond_linesearch}
-$$<p>En el método de descenso de gradiente, la forma de
-actualizar el vector de parámetros es como se define a continuación:</p>
-$$
-\beta_{k+1}=\beta_{k}-\alpha\nabla f_{k}\label{eq:steepest_descent}
-$$<p>De esta forma dado un $\beta_{0}$ inicial elegido aleatoriamente,
-la actualización de los pesos continúa hasta que $\|\nabla f_{k}\|\approx0$ 
-o hasta que un número definido de iteraciones se alcance.</p>
+<h3 id="M&#233;todos-de-b&#250;squeda-de-l&#237;nea">M&#233;todos de b&#250;squeda de l&#237;nea<a class="anchor-link" href="#M&#233;todos-de-b&#250;squeda-de-l&#237;nea">&#182;</a></h3><p>En los métodos de búsqueda de línea son métodos iterativos que consisten en dar pasos sobre una dirección de descenso para una función convexa. En cada iteración damos una paso de la forma:</p>
+$$x_{k+1}=x_k +\alpha_k p_k$$<p>donde $\alpha$ representa el tamaño del paso y $p_k$ la dirección del descenso.</p>
+<p>La dirección de descenso la definimos como:</p>
+$$p_k=-B^{-1}_k \nabla f_k$$<p>Con $B$ una matriz simétrica y no singular.</p>
+<p>Cuando $B_k$ es definida postiva entonces tenemos que:</p>
+$$p^T_k \nabla f_k = -\nabla f^T_k B^{-1}_k \nabla f_k$$<p>y por tanto $p_k$ es una dirección de descenso.</p>
 
 </div>
 </div>
@@ -14498,32 +14471,7 @@ o hasta que un número definido de iteraciones se alcance.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="M&#233;todo-de-Newton">M&#233;todo de Newton<a class="anchor-link" href="#M&#233;todo-de-Newton">&#182;</a></h3><p>El método de Newton es parte la familia de métodos de optimización
-de segundo orden, en la medida que tienen en cuenta la curvatura de
-la función a optimizar, la cual es incorporada por la matriz Hessiana,
-$\nabla^{2}f$. Lo anterior, implica un mayor costo en términos de
-cómputo con respecto al algoritmo de máximo descenso. Sin embargo,
-la existencia de dicha curvatura, en la mayoría de los problemas,
-permite lograr niveles de convergencia mucho más rápido.</p>
-<p>En particular, en este método, la forma de actualizar el vector de
-parámetros es de la siguiente manera:</p>
-$$
-\beta_{k+1}=\beta_{k}-\alpha_{k}\nabla^{2}f_{k}^{-1}\nabla f_{k}\label{eq:act_newton}
-$$<h3 id="M&#233;todo-BFGS">M&#233;todo BFGS<a class="anchor-link" href="#M&#233;todo-BFGS">&#182;</a></h3><p>El método de propuesto por Broyden, Fletcher, Goldfarb and Shanno
-(BFGS) es un algoritmo quasi-newtoniano que aborda una solución a
-los problemas en los cuales es muy costoso el cómputo de la matriz
-Hessiana de $f_{k}$. Como es descrito por Murphy, este método iterativamente
-computa una aproximación de $\nabla^{2}f_{k}$ a partir del gradiente,
-$\nabla f_{k}$.</p>
-<p>Dado lo anterior, la aproximación de la matriz Hessiana se define
-como $H_{k}\approx\nabla^{2}f_{k}$, y se calcula con una función
-de rango 2 dada por:</p>
-\begin{align}
-H_{k+1} &amp; =H_{k}+\frac{w_{k}(w_{k})^{T}}{(w_{k})^{T}z_{k}}-\frac{H_{k}z_{k}(H_{k}z_{k})^{T}}{(z_{k})^{T}H_{k}z_{k}}\label{eq:H}\\
-z_{k} &amp; =\beta_{k+1}-\beta_{k}\label{z}\\
-w_{k} &amp; =\nabla f_{k+1}-\nabla f_{k}\label{eq:w}
-\end{align}<p>Como es mencionado por Murphy (2012), por lo general el algoritmo se inicializa
-con $H_{o}=I$.</p>
+<h3 id="M&#233;todo-de-m&#225;ximo-descenso">M&#233;todo de m&#225;ximo descenso<a class="anchor-link" href="#M&#233;todo-de-m&#225;ximo-descenso">&#182;</a></h3>$$B_k = I$$<h3 id="M&#233;todo-de-Newton">M&#233;todo de Newton<a class="anchor-link" href="#M&#233;todo-de-Newton">&#182;</a></h3>$$B_k = \nabla^2 f_k$$<h3 id="BFGS">BFGS<a class="anchor-link" href="#BFGS">&#182;</a></h3>$$B_k \approx \nabla^2 f_k$$<p></p>
 
 </div>
 </div>
@@ -14975,13 +14923,9 @@ $$\nabla L=\frac{dL}{d\mu_i} =\frac{1}{m} \sum^{m}_{i=1} x_i(\mu_i-y_i)$$
     <span class="n">perdida</span><span class="o">=</span><span class="n">riesgo_empirico</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span>
     <span class="n">error</span><span class="o">=</span><span class="n">error_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span>
     
-    <span class="c1"># while ((np.linalg.norm(gradiente_f(X,y,beta_new)) &gt; epsilon) &amp; (iteraciones &lt; max_iter)):</span>
-    <span class="c1"># while abs(f(X,y,beta) - f(X,y,beta_new)) &gt; epsilon:</span>
     <span class="k">while</span> <span class="n">iteraciones</span><span class="o">&lt;</span><span class="n">max_iter</span><span class="p">:</span>
         <span class="n">iteraciones</span> <span class="o">+=</span><span class="mi">1</span>
-        <span class="c1">#print(&quot;iteraciones1=&quot;,iteraciones)</span>
         <span class="n">beta</span> <span class="o">=</span> <span class="n">beta_new</span>
-        <span class="c1">#x_lote,y_lote = mini_lotes(X,y,q)</span>
         <span class="n">index</span><span class="o">=</span><span class="n">batch</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">batch_size</span><span class="p">)</span>
         <span class="n">x_lote</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">index</span><span class="p">,:]</span>
         <span class="n">y_lote</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
@@ -14994,7 +14938,6 @@ $$\nabla L=\frac{dL}{d\mu_i} =\frac{1}{m} \sum^{m}_{i=1} x_i(\mu_i-y_i)$$
             <span class="n">err</span><span class="o">=</span><span class="n">error_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span>
             <span class="n">error</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">error_train</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">,</span><span class="n">beta_hat</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loss:</span><span class="si">{loss:.4}</span><span class="s1">, epoca:</span><span class="si">{epoca}</span><span class="s1">, iter:</span><span class="si">{iteraciones}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="c1">#print(&quot;iteraciones3=&quot;,iteraciones)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nº DE INTERACIONES: &quot;</span><span class="p">,</span><span class="n">iteraciones</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">beta_new</span><span class="p">,</span><span class="n">perdida</span><span class="p">,</span><span class="n">error</span>
 </pre></div>
@@ -15489,35 +15432,7 @@ Wall time: 19min 30s
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>from IPython.display import Image
-<img src="rendimiento.png" alt="title"></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Tres conclusiones para los algoritmos que no incorporan optimización estocática</p>
-<ul>
-<li>El algoritmo más eficiente en términos de computo (que incluye iteraciones y tiempo de cómputo) fue el método de Newton. Este método se detuvo por el criterio de convergencia establecido en tan solo 87 iteraciones. Por otro lado, el método más ineficiente en tiempo de computo e iteraciones es el BFGS, el cual logró convergencia luego de 47,837 iteraciones.</li>
-<li>Los algoritmos estudiados se detuvieron por el criterio de parada de convergencia.</li>
-<li>Aunque divergen en tiempo de cómputo, todos los algoritmos estudiados logran alcanzar una precisión de 95.45\% y un $\hat{\beta_0}$ idéntico.</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Para los algoritmos con optimización estocástica:</p>
-<ul>
-<li><p>Los algoritmos no convergieron hacia un mismo nivel de parámetros, sin embargo, lograron niveles de precisión similares.</p>
-</li>
-<li><p>Para este ejemplo estos algoritmos se demoran bastante si se comparan con los algoritmos que no utilizan optimización dinámica, sin embargo, las diferencias en rendimiento podrían evidenciarse con grandes niveles de datos.</p>
-</li>
-</ul>
+<p><img src="rendimiento.png" alt="title"></p>
 
 </div>
 </div>
@@ -15532,43 +15447,38 @@ Wall time: 19min 30s
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Como se mencionó anteriormente, el problema de regresión logística
-es una extensión del problema de regresión lineal, aplicada hacia
-un problema de clasificación. En este sentido, la regresión logística
-modela las probabilidades de clasificación de una variable dependiente
-dentro de dos posibles categorías, 0 y 1.</p>
-<p>La probabilidad
-de que un paciente muera a causa del virus del ébola para este modelo
+<ul>
+<li><p>El problema de regresión logística es una extensión del problema de regresión lineal aplicada a clasificación.</p>
+</li>
+<li><p>La probabilidad de que un paciente muera a causa del virus del ébola para este modelo
 se define de la siguiente forma:</p>
+</li>
+</ul>
 $$
 P\left(y=1\right)=\frac{e^{\beta^{T}x}}{1+e^{\beta^{T}x}}\label{eq:prob_y1a}
-$$<p>Lo que es equivalente a:</p>
+$$<p>ó:</p>
 $$
 P\left(y=1\right)=\frac{e^{\beta_{0}+\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}}}{1+e^{\beta_{0}+\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}}}\label{eq:prob_y1b}
-$$<ul>
-<li><p>Para este ejercicio, no estamos considerando el término equivalente al intercepto en el caso de regresión
-lineal (i.e $\beta_{0}=0)$.</p>
-</li>
-<li><p>A diferencia de un modelo de regresión tradicional, en este caso los pesos no afectan de forma lineal las probabilidades.</p>
-</li>
-<li>Para lograr interpretabilidad en cuanto a las probabilidades, es necesario despejar el componente lineal de la ecuación. </li>
+$$<p>Anotaciones:</p>
+<ul>
+<li>No estamos considerando el término equivalente al intercepto en el caso de regresión
+lineal (i.e $\beta_{0}=0)$.</li>
+<li>No se afectan de forma lineal las probabilidades.</li>
+<li>Interpretaciones: espejar el componente lineal de la ecuación. </li>
 </ul>
 <p>El término <em>logit</em> y corresponde al logaritmo del cociente entre la probabilidad de morir y la probabilidad de sobrevivir al virus (ratio de
 probabilidades: línea recta, dependiente del conjunto de covariables, $x$):</p>
 $$
 \lambda=\log\left\{ \frac{P\left(y=1\right)}{1-P\left(y=1\right)}\right\} =\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}\label{eq:param_logit}
 $$<ul>
-<li><p>El modelo logístico, dada la naturaleza
-dicotómica de la variable de salida del mismo no asume homocedasticidad.</p>
+<li><p>No asume homocedasticidad: modelo dicotómico.</p>
 </li>
-<li><p>La interpretación de los resultados del modelo de regresión logística 
-se realiza en términos del valor del ratio de probabilidades, que corresponde 
-al operador exponencial de $\lambda$. Dicho operador se lee como 
-el indicador de variación en el ratio de probabilidades como resultado del
-cambio en una unidad en la predicción.</p>
+<li><p>La interpretación de los resultados del modelo de regresión logística: $exp(\lambda)$.</p>
 </li>
+<li>Es el indicador de variación en el ratio de probabilidades como resultado del
+cambio en una unidad en la predicción.</li>
 </ul>
-<p>Los resultados para nuestro ejercicio implican:</p>
+<p><strong>Resultados con métodos no estocásticos</strong></p>
 $$
 ratio\:probs=\exp(\log\{-10.95x_{1}+18.88x_{2}-4.42x_{3}+1.14x_{4}+1.40x_{5}+4.76x_{6}-0.94x_{7}+3.006x_{8}+3.73x_{9}+4.45x_{10}+5.20x_{11}+6.38x_{12}
 $$<p>donde $x_{1},\ldots,x_{12}$ corresponden a: cycle threshold,
@@ -15576,21 +15486,21 @@ temperatura, dolor de cabeza, sangrado, diarrea, vómito, presencia
 de PABD, debilidad, edad hasta 22 años, edad entre 23 y 36 años, edad
 entre 37 y 45 años, y edad mayor a 45 años, respectivamente.</p>
 <ul>
-<li>Se debe calcular un valor de referencia con el cual se pueda comparar. </li>
+<li><p>Se debe calcular un valor de referencia con el cual se pueda comparar.</p>
+</li>
+<li><p>Caso sin ninguna complicación de salud adicional al virus del ébola, y su edad se encuentra en un rango de 0 años a 22 años</p>
+</li>
 </ul>
-<p>En este sentido, tomaremos dicho valor para el caso en el cual la persona no tiene ninguna complicación de salud adicional al virus del ébola, y su edad se encuentra en un rango de 0 años a 22 años</p>
-<p>Es decir que en la ecuación anterior, se tiene $x_{i}=0$ para $i=3,4,5,6,7,8$
-y $x_{9}=1$:</p>
+<p>Es decir $x_{i}=0$ para $i=3,4,5,6,7,8$ y $x_{9}=1$, por lo tanto:</p>
 $$
 ratio\:probs=\exp\left(\log\left\{ -10.95x_{1}+18.88x_{2}+3.73\right\} \right)
-$$<p>Si tomamos los valores promedio de cycle treshold $\bar{x}_{1}$,
-y de temperatura, $\bar{x}_{2}$ , tenemos lo siguiente:</p>
+$$<p>Reemplazamos en el ratio de probabilidades:</p>
 $$
 ratio\:probs_{0}=\exp\left(\log\left\{ -10.95\bar{x}_{1}+18.88\bar{x}_{2}+3.73\right\} \right)=\exp\left(\log\left\{ -10.95(25.72)+18.88(37.25)+3.73\right\} \right)=425.75
-$$<p>Por otro lado, si quisiéramos analizar, por ejemplo, cual es el efecto
-de que la persona tenga sangrado sobre la probabilidad de que la persona
+$$<p><strong>Ejemplo:</strong></p>
+<p>¿Cuál es el efecto de que la persona tenga sangrado sobre la probabilidad de que la persona
 muera por presencia del virus del ébola, debemos calcular el ratio
-de probabilidades ahora con $x_{4}=1$:</p>
+de probabilidades ahora con $x_{4}=1$ ?:</p>
 $$
 ratio\:probs_{1}=\exp\left(\log\left\{ -10.95\bar{x}_{1}+18.88\bar{x}_{2}+1.14+3.73\right\} \right)=\exp\left(\log\left\{ -10.95(25.72)+18.88(37.25)+1.14+3.73\right\} \right)=426.8
 $$<p>Ahora, si calculamos el ratio entre $ratio\:probs_{0}$ y $ratio\:probs_{1}$, tenemos:</p>
