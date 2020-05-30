@@ -585,7 +585,27 @@ def error_train(X,y,beta):
 def SGD(X,y,batch_size,verbose_n=100,max_iter=10**5):
     
     '''
+        Función que computa el gradiente de descenso estocastico
     
+        - Parámetros:
+        
+            -- X (mat): matriz de mxp entradas.
+            
+            -- y (vec): vector de de m entradas de la variable output.
+            
+            -- batch_size (int): tamaño del lote 
+            
+            -- verbose_n (int): Numero de interaciones a las que imprime en pantalla el estatus
+            
+            -- max_iter (int): Numero máximo de iteraciones
+
+        - Salidas
+            
+            -- beta (vec): Vector de parametros a optimizar
+            
+            -- perdida (vec): vecor con las perdidas de cada iteracion
+            
+            -- error (vec): Error de clasificacion con los parámetros actuales
     
     
     '''
@@ -646,12 +666,12 @@ def graf_loss_err(loss,error,title):
     de entrenamiento en cada iterazación.
     
         - Entradas:
-                    -- loss
-                    -- error
-                    ---title
+                    -- loss (vec): vector con las perdidas por época
+                    -- error(ver): voctor con los errores de cada época
+                    ---title (str): Titulo de la gráfica
         
         - Salidas:
-                    -- plot
+                    -- Imprime gráfica en pantalla
     
     '''
     
@@ -736,7 +756,28 @@ def evalua_gradiente(intervalo,perm,X,y,beta):
 def SGD_paralelo(X,y,verbose_n=100,max_iter=10**5):
     
     '''
+    Función que computa el gradiente de descenso estocastico de forma paralela
     
+        - Parámetros:
+        
+            -- X (mat): matriz de mxp entradas.
+            
+            -- y (vec): vector de de m entradas de la variable output.
+            
+            -- verbose_n (int): Numero de interaciones a las que imprime en pantalla el estatus
+            
+            -- max_iter (int): Numero máximo de iteraciones
+
+        - Salidas
+            
+            -- beta (vec): Vector de parametros a optimizar
+            
+            -- perdida (vec): vecor con las perdidas de cada iteracion
+            
+            -- error (vec): Error de clasificacion con los parámetros actuales
+    
+    
+    '''
     
     
     '''
