@@ -13083,7 +13083,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># librerías</span>
@@ -13119,8 +13119,12 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>En este notebook se plantea la solución del problema utilizando los siguiente métodos: Newton, Broyden-Fletcher-Goldfarb-Shanno  (BFGS) y el gradiente descendente estocástico (SGD). El presente notebook es autocontenido, sin embargo, la implementación principal se realiza con un enfoque modular.</p>
-<p>A continuación, se describe el conjunto de datos que se emplearán y se define el planteamiento del problema. Una explicación más detallada se realiza en el informe (en formato PDF) de este proyecto.</p>
+<h2 id="Introducci&#243;n">Introducci&#243;n<a class="anchor-link" href="#Introducci&#243;n">&#182;</a></h2><p>Tomando como referencia el trabajo de investigación realizado por Colubri et al. (2019), se busca entrenar un modelo de regresión logística que permite pronosticar la supervivencia a enfermedad por virus del ébola.  Para tal propósito, se utilizan datos recolectados por el Cuerpo Internacionalde Medicina (IMC, por sus siglas en inglés) durante 2014 y 2016 en Liberia y Sierra Leona.</p>
+<p><img src="img/region_aplicacion.png" alt="region_aplicacion" width="500"/></p>
+<blockquote><p><strong>Objetivo General:</strong> Evaluar el desempeño de diferentes métodos de optimización numérica (método del máximo descenso, método de Newton, método BFGS(Broyden, Fletcher, Goldfarb y Shanno), y SGD), en un contexto de machine learning, utilizando métodos cómputo simples y en paralelo.</p>
+<blockquote><p><strong>Objetivo Particular:</strong> En particular, se mide el desempeño, tanto en términos del uso y tiempo de recursos computacionales para lograr convergencia, como con relación a métricas de desempeño del modelo</p>
+</blockquote>
+</blockquote>
 <p><strong>Nota:</strong> Esta implementación se basa en material y actividades impartidas por los profesores de los cursos de <a href="https://github.com/ITAM-DS/analisis-numerico-computo-cientifico/blob/master/temas/IV.optimizacion_convexa_y_machine_learning/4.3.Regresion_logistica_R.ipynb">Métodos Numéricos y optimización</a> (2010-I) (Prof. Erick Palacios Moreno) y Aprendizaje de Máquina (2019-II) (Prof. Rodrigo Mendoza Smith).</p>
 
 </div>
@@ -13129,7 +13133,27 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Problema-de-regresi&#243;n-Log&#237;stica">Problema de regresi&#243;n Log&#237;stica<a class="anchor-link" href="#Problema-de-regresi&#243;n-Log&#237;stica">&#182;</a></h2><p>Como es resaltado por Murphy (2012), el problema de regresión logística es una generalización del problema de regresión lineal, convirtiendolo hacia un problema de clasificación, siempre y cuando la variable de respuesta sea de carácter binario (i.e. $y\in\left\{ 0,1\right\} $), y por tanto se pueda asumir que sigue una distribución Bernoulli. En este caso, dicha variable de respuesta corresponde a si el paciente muere a casua del virus del ébola $(1)$, o no $(0)$.</p>
+<p><strong>Orden de Presentación</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p><a href="#section1">1. Introducción al problema a resolver.</a></p>
+<p><a href="#section2">2. Conjunto de Datos.</a></p>
+<p><a href="#section3">3. Implementación de los métodos numéricos (demostración con Docker y AWS)</a></p>
+<p><a href="#section4">4. Resultados obtenidos.</a></p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Problema-de-regresi&#243;n-Log&#237;stica">1. Problema de regresi&#243;n Log&#237;stica<a class="anchor-link" href="#1.-Problema-de-regresi&#243;n-Log&#237;stica">&#182;</a></h2><p>Como es resaltado por Murphy (2012), el problema de regresión logística es una generalización del problema de regresión lineal, convirtiendolo hacia un problema de clasificación, siempre y cuando la variable de respuesta sea de carácter binario (i.e. $y\in\left\{ 0,1\right\} $), y por tanto se pueda asumir que sigue una distribución Bernoulli. En este caso, dicha variable de respuesta corresponde a si el paciente muere a casua del virus del ébola $(1)$, o no $(0)$.</p>
 <p>Dado lo anterior, utilizamos:</p>
 $$
 {Pr[y\mid\boldsymbol{x,w}]=Ber(y\mid\mu(x))}\label{eq:dist_ber}
@@ -13148,13 +13172,8 @@ $$<p>donde $\sigma$ está definida por:</p>
 \sigma(x)=\frac{1}{1+\exp(-x)}=\frac{e^{x}}{e^{x}+1}\label{eq:sigmoide} 
 \end{equation}<p>Los resultados asociados a la ecuación $\mu(x)$ están dados
 en términos de probabilidades. Así, es necesario definir un umbral clasificatorio para definir si el modelo predice que el paciente fallezca, o no. En este ejercicio, como se hace usualmente, y como realizan Colubri et. al (2019), se toma como umbral el valor de $0.5$. Es decir:</p>
-$$
-\hat{y}=\left\{
-\begin{array}{@{}ll@{}}
-0, &amp; \text{si}\ \sigma(\hat{\beta}^Tx)  &lt; 0.5 \\
-1, &amp; \text{si} \ \sigma(\hat{\beta}^Tx) \geq 0.5
-\end{array}\right. \label{eq:umbral}
-$$<p>Los parámetros asociados a las variables regresoras, $\hat{\beta}$, son estimados con el conjunto de datos de entrenamiento.</p>
+<p><img src="img/umbral.png" alt="umbral" width="250"/></p>
+<p>Los parámetros asociados a las variables regresoras, $\hat{\beta}$, son estimados con el conjunto de datos de entrenamiento.</p>
 <h3 id="Funci&#243;n-de-p&#233;rdida">Funci&#243;n de p&#233;rdida<a class="anchor-link" href="#Funci&#243;n-de-p&#233;rdida">&#182;</a></h3><p>La función de pérdida asociada a este problema es la log-verosimilitud
 negativa, o entropía cruzada, definida de las siguiente forma:</p>
 $$
@@ -13168,7 +13187,7 @@ la función de pérdida en torno a $\beta$ es requerido <strong>utilizar método
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Conjunto-de-datos">Conjunto de datos<a class="anchor-link" href="#Conjunto-de-datos">&#182;</a></h2>
+<h2 id="2.-Conjunto-de-datos">2. Conjunto de datos<a class="anchor-link" href="#2.-Conjunto-de-datos">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -14471,8 +14490,9 @@ $$p^T_k \nabla f_k = -\nabla f^T_k B^{-1}_k \nabla f_k$$<p>y por tanto $p_k$ es 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="M&#233;todo-de-m&#225;ximo-descenso">M&#233;todo de m&#225;ximo descenso<a class="anchor-link" href="#M&#233;todo-de-m&#225;ximo-descenso">&#182;</a></h3>$$B_k = I$$<h3 id="M&#233;todo-de-Newton">M&#233;todo de Newton<a class="anchor-link" href="#M&#233;todo-de-Newton">&#182;</a></h3>$$B_k = \nabla^2 f_k$$<h3 id="BFGS">BFGS<a class="anchor-link" href="#BFGS">&#182;</a></h3>$$B_k \approx \nabla^2 f_k$$<p></p>
-
+<h3 id="Condiciones-de-Armijo">Condiciones de Armijo<a class="anchor-link" href="#Condiciones-de-Armijo">&#182;</a></h3>$$
+f\left(x_{k}+\alpha p_{k}\right)\leq f(x_{k})+c_{1}\alpha\nabla f_{k}^{T}p_{k}
+$$<h3 id="M&#233;todo-de-m&#225;ximo-descenso">M&#233;todo de m&#225;ximo descenso<a class="anchor-link" href="#M&#233;todo-de-m&#225;ximo-descenso">&#182;</a></h3>$$B_k = I$$<h3 id="M&#233;todo-de-Newton">M&#233;todo de Newton<a class="anchor-link" href="#M&#233;todo-de-Newton">&#182;</a></h3>$$B_k = \nabla^2 f_k$$<h3 id="BFGS">BFGS<a class="anchor-link" href="#BFGS">&#182;</a></h3>$$B^{-1}_k \approx H_k$$
 </div>
 </div>
 </div>
@@ -15432,7 +15452,7 @@ Wall time: 19min 30s
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="rendimiento.png" alt="title"></p>
+<p><img src="img/rendimiento.png" alt="title"></p>
 
 </div>
 </div>
@@ -15459,24 +15479,20 @@ P\left(y=1\right)=\frac{e^{\beta^{T}x}}{1+e^{\beta^{T}x}}\label{eq:prob_y1a}
 $$<p>ó:</p>
 $$
 P\left(y=1\right)=\frac{e^{\beta_{0}+\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}}}{1+e^{\beta_{0}+\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}}}\label{eq:prob_y1b}
-$$<p>Anotaciones:</p>
-<ul>
+$$<ul>
 <li>No estamos considerando el término equivalente al intercepto en el caso de regresión
 lineal (i.e $\beta_{0}=0)$.</li>
 <li>No se afectan de forma lineal las probabilidades.</li>
 <li>Interpretaciones: espejar el componente lineal de la ecuación. </li>
+<li><strong>logit</strong>: log del cociente entre la probabilidad de morir y la probabilidad de sobrevivir al virus (ratio de
+probabilidades: línea recta, dependiente del conjunto de covariables, $x$):</li>
 </ul>
-<p>El término <em>logit</em> y corresponde al logaritmo del cociente entre la probabilidad de morir y la probabilidad de sobrevivir al virus (ratio de
-probabilidades: línea recta, dependiente del conjunto de covariables, $x$):</p>
 $$
 \lambda=\log\left\{ \frac{P\left(y=1\right)}{1-P\left(y=1\right)}\right\} =\beta_{1}x_{1}+\ldots+\beta_{p}x_{p}\label{eq:param_logit}
 $$<ul>
-<li><p>No asume homocedasticidad: modelo dicotómico.</p>
-</li>
-<li><p>La interpretación de los resultados del modelo de regresión logística: $exp(\lambda)$.</p>
-</li>
-<li>Es el indicador de variación en el ratio de probabilidades como resultado del
-cambio en una unidad en la predicción.</li>
+<li>No asume homocedasticidad: modelo dicotómico.</li>
+<li>La interpretación de los resultados del modelo de regresión logística: $exp(\lambda)$.</li>
+<li>Es el indicador de variación en el ratio de probabilidades como resultado del cambio en una unidad en la predicción.</li>
 </ul>
 <p><strong>Resultados con métodos no estocásticos</strong></p>
 $$
@@ -15514,6 +15530,19 @@ de la variable dependiente incrementa. </li>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
     </div>
   </div>
